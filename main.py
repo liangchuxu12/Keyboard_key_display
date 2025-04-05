@@ -152,12 +152,12 @@ def draw_keyboard():
 
     # 显示说明
     font = pygame.font.SysFont(None, 24)
-    instruction = font.render("按下键盘上的键，对应键位会亮起。按ESC退出。", True, BLACK)
+    instruction = font.render("", True, BLACK)
     screen.blit(instruction, (10, HEIGHT - 30))
 
     # 添加数字小键盘区的标签
     label_font = pygame.font.SysFont(None, 28, bold=True)
-    label = label_font.render("数字小键盘", True, BLUE)
+    label = label_font.render("", True, BLUE)
     screen.blit(label, (1020, HEIGHT - 30))
 
 
