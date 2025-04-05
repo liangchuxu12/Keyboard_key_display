@@ -1,21 +1,18 @@
 import pygame
 import sys
-import os
 
 # 初始化pygame
 pygame.init()
 
 # 设置窗口
-WIDTH, HEIGHT = 1350, 400  # 从1400缩小到1350
+WIDTH, HEIGHT = 1350, 400
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("键盘可视化工具")
+pygame.display.set_caption("键盘可视化工具 - 区分主键盘和小键盘数字键")
 
 # 颜色定义
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
-RED = (255, 0, 0)
-BLUE = (0, 0, 255)
 GREEN = (0, 255, 0)
 
 # 键盘布局定义 (x, y, width, height, 主字符, 上档字符)
@@ -48,59 +45,83 @@ key_layout = [
     (680, 220, 60, 60, ".", ">"), (750, 220, 60, 60, "/", "?"), (820, 220, 180, 60, "Shift", ""),
 
     # 第五行
-    (10, 290, 70, 60, "L Ctrl", ""),  # 修改为L Ctrl
-    (90, 290, 70, 60, "L Win", ""),  # 左Win键
-    (170, 290, 70, 60, "L Alt", ""),  # 修改为L Alt
-    (250, 290, 300, 60, "Space", ""),
-    (560, 290, 70, 60, "R Alt", ""),  # 修改为R Alt
-    (640, 290, 70, 60, "R Win", ""),  # 右Win键
-    (720, 290, 70, 60, "Menu", ""),
-    (800, 290, 70, 60, "R Ctrl", ""),  # 修改为R Ctrl
+    (10, 290, 70, 60, "L Ctrl", ""), (90, 290, 70, 60, "L Win", ""), (170, 290, 70, 60, "L Alt", ""),
+    (250, 290, 300, 60, "Space", ""), (560, 290, 70, 60, "R Alt", ""), (640, 290, 70, 60, "R Win", ""),
+    (720, 290, 70, 60, "Menu", ""), (800, 290, 70, 60, "R Ctrl", ""),
 
-    # 数字小键盘区（所有x坐标从1050改为1020）
-    (1020, 10, 60, 60, "Num\nLock", ""), (1090, 10, 60, 60, "/", ""), (1160, 10, 60, 60, "*", ""),
-    (1230, 10, 60, 60, "-", ""),
-    (1020, 80, 60, 60, "7", "Home"), (1090, 80, 60, 60, "8", "↑"), (1160, 80, 60, 60, "9", "PgUp"),
-    (1230, 80, 60, 120, "+", ""),
-    (1020, 150, 60, 60, "4", "←"), (1090, 150, 60, 60, "5", ""), (1160, 150, 60, 60, "6", "→"),
-    (1020, 220, 60, 60, "1", "End"), (1090, 220, 60, 60, "2", "↓"), (1160, 220, 60, 60, "3", "PgDn"),
-    (1230, 220, 60, 120, "Enter", ""),
-    (1020, 290, 120, 60, "0", "Ins"), (1150, 290, 60, 60, ".", "Del")
+    # 数字小键盘区（带Num前缀）
+    (1020, 10, 60, 60, "Num\nLock", ""), (1090, 10, 60, 60, "Num /", ""), (1160, 10, 60, 60, "Num *", ""),
+    (1230, 10, 60, 60, "Num -", ""),
+    (1020, 80, 60, 60, "Num 7", "Home"), (1090, 80, 60, 60, "Num 8", "↑"), (1160, 80, 60, 60, "Num 9", "PgUp"),
+    (1230, 80, 60, 120, "Num +", ""),
+    (1020, 150, 60, 60, "Num 4", "←"), (1090, 150, 60, 60, "Num 5", ""), (1160, 150, 60, 60, "Num 6", "→"),
+    (1020, 220, 60, 60, "Num 1", "End"), (1090, 220, 60, 60, "Num 2", "↓"), (1160, 220, 60, 60, "Num 3", "PgDn"),
+    (1230, 220, 60, 120, "Num Enter", ""),
+    (1020, 290, 120, 60, "Num 0", "Ins"), (1150, 290, 60, 60, "Num .", "Del")
 ]
 
-# 特殊键映射
+# 特殊键映射（已区分主键盘和小键盘数字键）
 special_keys = {
+    # 主键盘区功能键
     pygame.K_BACKSPACE: "Backspace",
     pygame.K_TAB: "Tab",
     pygame.K_CAPSLOCK: "Caps Lock",
     pygame.K_RETURN: "Enter",
-    pygame.K_LSHIFT: "L Shift",  # 修改为L Shift
-    pygame.K_RSHIFT: "R Shift",  # 修改为R Shift
-    pygame.K_LCTRL: "L Ctrl",    # 修改为L Ctrl
-    pygame.K_RCTRL: "R Ctrl",    # 修改为R Ctrl
-    pygame.K_LALT: "L Alt",      # 修改为L Alt
-    pygame.K_RALT: "R Alt",      # 修改为R Alt
-    pygame.K_LGUI: "L Win",      # 左Win键
-    pygame.K_RGUI: "R Win",      # 右Win键
+    pygame.K_LSHIFT: "L Shift",
+    pygame.K_RSHIFT: "R Shift",
+    pygame.K_LCTRL: "L Ctrl",
+    pygame.K_RCTRL: "R Ctrl",
+    pygame.K_LALT: "L Alt",
+    pygame.K_RALT: "R Alt",
+    pygame.K_LGUI: "L Win",
+    pygame.K_RGUI: "R Win",
     pygame.K_MENU: "Menu",
     pygame.K_SPACE: "Space",
+
+    # 主键盘数字键（0-9）
+    pygame.K_0: "0",
+    pygame.K_1: "1",
+    pygame.K_2: "2",
+    pygame.K_3: "3",
+    pygame.K_4: "4",
+    pygame.K_5: "5",
+    pygame.K_6: "6",
+    pygame.K_7: "7",
+    pygame.K_8: "8",
+    pygame.K_9: "9",
+
+    # 小键盘区功能键
     pygame.K_NUMLOCK: "Num\nLock",
-    pygame.K_KP_DIVIDE: "/",
-    pygame.K_KP_MULTIPLY: "*",
-    pygame.K_KP_MINUS: "-",
-    pygame.K_KP_PLUS: "+",
-    pygame.K_KP_ENTER: "Enter",
-    pygame.K_KP_PERIOD: ".",
-    pygame.K_KP0: "0",
-    pygame.K_KP1: "1",
-    pygame.K_KP2: "2",
-    pygame.K_KP3: "3",
-    pygame.K_KP4: "4",
-    pygame.K_KP5: "5",
-    pygame.K_KP6: "6",
-    pygame.K_KP7: "7",
-    pygame.K_KP8: "8",
-    pygame.K_KP9: "9"
+    pygame.K_KP_DIVIDE: "Num /",
+    pygame.K_KP_MULTIPLY: "Num *",
+    pygame.K_KP_MINUS: "Num -",
+    pygame.K_KP_PLUS: "Num +",
+    pygame.K_KP_ENTER: "Num Enter",
+    pygame.K_KP_PERIOD: "Num .",
+
+    # 小键盘数字键（带Num前缀）
+    pygame.K_KP0: "Num 0",
+    pygame.K_KP1: "Num 1",
+    pygame.K_KP2: "Num 2",
+    pygame.K_KP3: "Num 3",
+    pygame.K_KP4: "Num 4",
+    pygame.K_KP5: "Num 5",
+    pygame.K_KP6: "Num 6",
+    pygame.K_KP7: "Num 7",
+    pygame.K_KP8: "Num 8",
+    pygame.K_KP9: "Num 9",
+
+    # 其他符号键
+    pygame.K_EQUALS: "=",
+    pygame.K_MINUS: "-",
+    pygame.K_LEFTBRACKET: "[",
+    pygame.K_RIGHTBRACKET: "]",
+    pygame.K_BACKSLASH: "\\",
+    pygame.K_SEMICOLON: ";",
+    pygame.K_QUOTE: "'",
+    pygame.K_COMMA: ",",
+    pygame.K_PERIOD: ".",
+    pygame.K_SLASH: "/",
 }
 
 # 存储按下的键
@@ -114,6 +135,9 @@ caps_lock = False
 
 def draw_keyboard():
     screen.fill(WHITE)
+
+    # 绘制主键盘区和数字小键盘区之间的分隔线
+    pygame.draw.line(screen, (180, 180, 180), (1000, 10), (1000, 350), 2)
 
     for key in key_layout:
         x, y, w, h, char, shift_char = key
@@ -129,38 +153,47 @@ def draw_keyboard():
         pygame.draw.rect(screen, color, key_rect)
         pygame.draw.rect(screen, BLACK, key_rect, 2)
 
-        # 显示键上的字符
-        font = pygame.font.SysFont(None, 24)
+        # 显示键上的字符（移除Num前缀）
+        font = pygame.font.SysFont('Arial', 24)
+        display_char = char.replace("Num ", "") if char else key_name.replace("Num ", "")
 
-        if "\n" in char:  # 处理多行文本
-            lines = char.split("\n")
+        if "\n" in display_char:  # 处理多行文本
+            lines = display_char.split("\n")
+            line_height = font.get_height()
+            total_height = len(lines) * line_height
+            start_y = y + (h - total_height) // 2
+
             for i, line in enumerate(lines):
                 text = font.render(line, True, BLACK)
-                text_rect = text.get_rect(center=(x + w // 2, y + h // 2 - (len(lines) // 2 - i) * 20))
-                screen.blit(text, text_rect)
+                text_x = x + (w - text.get_width()) // 2
+                screen.blit(text, (text_x, start_y + i * line_height))
+
         elif shift_char and char:  # 有上下两个字符的键
             # 上档字符（小字体）
-            small_font = pygame.font.SysFont(None, 20)
-            shift_text = small_font.render(shift_char, True, BLACK)
-            screen.blit(shift_text, (x + 5, y + 5))
+            small_font = pygame.font.SysFont('Arial', 18)
+            shift_text = small_font.render(shift_char.replace("Num ", ""), True, BLACK)
+            screen.blit(shift_text, (x + w - shift_text.get_width() - 5, y + 5))
 
             # 主字符
-            char_text = font.render(char, True, BLACK)
-            screen.blit(char_text, (x + w - char_text.get_width() - 5, y + h - char_text.get_height() - 5))
+            char_text = font.render(display_char, True, BLACK)
+            screen.blit(char_text, (x + 5, y + h - char_text.get_height() - 5))
+
         else:  # 单字符或功能键
-            text = font.render(char if char else key_name, True, BLACK)
-            text_rect = text.get_rect(center=key_rect.center)
-            screen.blit(text, text_rect)
+            if len(display_char) > 5 and ' ' in display_char:  # 如"Caps Lock"
+                parts = display_char.split(' ')
+                part1 = font.render(parts[0], True, BLACK)
+                part2 = font.render(parts[1], True, BLACK)
+                screen.blit(part1, (x + (w - part1.get_width()) // 2, y + h // 2 - 20))
+                screen.blit(part2, (x + (w - part2.get_width()) // 2, y + h // 2 + 5))
+            else:
+                text = font.render(display_char, True, BLACK)
+                text_rect = text.get_rect(center=key_rect.center)
+                screen.blit(text, text_rect)
 
     # 显示说明
-    font = pygame.font.SysFont(None, 24)
-    # instruction = font.render("按下键盘上的键，对应键位会亮起。按ESC退出。", True, BLACK)
+    # font = pygame.font.SysFont('Arial', 24)
+    # instruction = font.render("Press any key (ESC to quit) - 主键盘和小键盘数字键已区分", True, BLACK)
     # screen.blit(instruction, (10, HEIGHT - 30))
-
-    # 数字小键盘标签（位置微调）
-    label_font = pygame.font.SysFont(None, 28, bold=True)
-    # label = label_font.render("数字小键盘", True, BLUE)
-    # screen.blit(label, (1040, HEIGHT - 30))  # x坐标从1070改为1040
 
 
 running = True
@@ -187,7 +220,7 @@ while running:
                     if shift_pressed or caps_lock:
                         # 查找上档字符
                         for key in key_layout:
-                            if key[4] == key_name.lower():
+                            if key[4].replace("Num ", "") == key_name.lower():
                                 if key[5]:  # 如果有上档字符
                                     key_name = key[5] if shift_pressed else key_name.upper() if caps_lock else key_name
                                 break
@@ -211,7 +244,7 @@ while running:
                     if shift_pressed or caps_lock:
                         # 查找上档字符
                         for key in key_layout:
-                            if key[4] == key_name.lower():
+                            if key[4].replace("Num ", "") == key_name.lower():
                                 if key[5]:  # 如果有上档字符
                                     key_name = key[5] if shift_pressed else key_name.upper() if caps_lock else key_name
                                 break
