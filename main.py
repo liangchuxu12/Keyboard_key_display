@@ -6,7 +6,7 @@ import os
 pygame.init()
 
 # 设置窗口
-WIDTH, HEIGHT = 1300, 400  # 从1000增加到1300
+WIDTH, HEIGHT = 1350, 400  # 从1400缩小到1350
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("键盘可视化工具")
 
@@ -57,12 +57,15 @@ key_layout = [
     (720, 290, 70, 60, "Menu", ""),
     (800, 290, 70, 60, "R Ctrl", ""),  # 修改为R Ctrl
 
-    # 数字小键盘区
-    (1000, 10, 60, 60, "Num\nLock", ""), (1070, 10, 60, 60, "/", ""), (1140, 10, 60, 60, "*", ""), (1210, 10, 60, 60, "-", ""),
-    (1000, 80, 60, 60, "7", "Home"), (1070, 80, 60, 60, "8", "↑"), (1140, 80, 60, 60, "9", "PgUp"), (1210, 80, 60, 120, "+", ""),
-    (1000, 150, 60, 60, "4", "←"), (1070, 150, 60, 60, "5", ""), (1140, 150, 60, 60, "6", "→"),
-    (1000, 220, 60, 60, "1", "End"), (1070, 220, 60, 60, "2", "↓"), (1140, 220, 60, 60, "3", "PgDn"), (1210, 220, 60, 120, "Enter", ""),
-    (1000, 290, 120, 60, "0", "Ins"), (1130, 290, 60, 60, ".", "Del")
+    # 数字小键盘区（所有x坐标从1050改为1020）
+    (1020, 10, 60, 60, "Num\nLock", ""), (1090, 10, 60, 60, "/", ""), (1160, 10, 60, 60, "*", ""),
+    (1230, 10, 60, 60, "-", ""),
+    (1020, 80, 60, 60, "7", "Home"), (1090, 80, 60, 60, "8", "↑"), (1160, 80, 60, 60, "9", "PgUp"),
+    (1230, 80, 60, 120, "+", ""),
+    (1020, 150, 60, 60, "4", "←"), (1090, 150, 60, 60, "5", ""), (1160, 150, 60, 60, "6", "→"),
+    (1020, 220, 60, 60, "1", "End"), (1090, 220, 60, 60, "2", "↓"), (1160, 220, 60, 60, "3", "PgDn"),
+    (1230, 220, 60, 120, "Enter", ""),
+    (1020, 290, 120, 60, "0", "Ins"), (1150, 290, 60, 60, ".", "Del")
 ]
 
 # 特殊键映射
@@ -129,8 +132,7 @@ def draw_keyboard():
         # 显示键上的字符
         font = pygame.font.SysFont(None, 24)
 
-        # 处理多行文本（如"Num\nLock"）
-        if "\n" in char:
+        if "\n" in char:  # 处理多行文本
             lines = char.split("\n")
             for i, line in enumerate(lines):
                 text = font.render(line, True, BLACK)
@@ -152,13 +154,13 @@ def draw_keyboard():
 
     # 显示说明
     font = pygame.font.SysFont(None, 24)
-    instruction = font.render("", True, BLACK)
-    screen.blit(instruction, (10, HEIGHT - 30))
+    # instruction = font.render("按下键盘上的键，对应键位会亮起。按ESC退出。", True, BLACK)
+    # screen.blit(instruction, (10, HEIGHT - 30))
 
-    # 添加数字小键盘区的标签
+    # 数字小键盘标签（位置微调）
     label_font = pygame.font.SysFont(None, 28, bold=True)
-    label = label_font.render("", True, BLUE)
-    screen.blit(label, (1020, HEIGHT - 30))
+    # label = label_font.render("数字小键盘", True, BLUE)
+    # screen.blit(label, (1040, HEIGHT - 30))  # x坐标从1070改为1040
 
 
 running = True
